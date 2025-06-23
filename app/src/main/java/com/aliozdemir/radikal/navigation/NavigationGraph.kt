@@ -1,7 +1,10 @@
 package com.aliozdemir.radikal.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,6 +15,7 @@ import com.aliozdemir.radikal.navigation.Screen.Search
 import com.aliozdemir.radikal.ui.bookmark.BookmarkScreen
 import com.aliozdemir.radikal.ui.detail.DetailScreen
 import com.aliozdemir.radikal.ui.home.HomeScreen
+import com.aliozdemir.radikal.ui.home.HomeViewModel
 import com.aliozdemir.radikal.ui.search.SearchScreen
 
 @Composable
@@ -21,13 +25,18 @@ fun NavigationGraph(
     modifier: Modifier = Modifier,
 ) {
     NavHost(
-        modifier = modifier,
         navController = navController,
         startDestination = startDestination,
+        modifier = modifier,
     ) {
         composable<Home> {
+            val viewModel: HomeViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val uiEffect = viewModel.uiEffect
             HomeScreen(
-
+                uiState = uiState,
+                onAction = viewModel::handleUiAction,
+                uiEffect = uiEffect,
             )
         }
         composable<Search> {

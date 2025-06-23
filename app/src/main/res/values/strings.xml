@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Radikal</string>
+
+    <string name="home_screen_title">Breaking News</string>
+
+    <!-- Article -->
+    <string name="article_default_title">No Title</string>
+    <string name="article_default_description">No Description</string>
+    <string name="article_default_published_at">Unknown Date</string>
+    <string name="article_default_source">Unknown Source</string>
+    <string name="article_default_author">Unknown Author</string>
+    <string name="article_default_content">No Content</string>
 </resources>
