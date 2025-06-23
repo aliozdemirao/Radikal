@@ -18,6 +18,10 @@ hiltNavigationCompose = "1.2.0"
 navigation = "2.9.0"
 serialization = "1.8.1"
 
+# OkHttp - Retrofit
+okhttpBom = "4.12.0"
+retrofit = "3.0.0"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -42,6 +46,12 @@ androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-com
 # Navigation - Serialization
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+
+# OkHttp - Retrofit
+okhttp-bom = { module = "com.squareup.okhttp3:okhttp-bom", version.ref = "okhttpBom" }
+okhttp = { module = "com.squareup.okhttp3:okhttp" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+converter-kotlinx-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "retrofit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -72,4 +72,10 @@ dependencies {
     // Navigation - Serialization
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
+
+    // OkHttp - Retrofit
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.okhttp)
+    implementation(libs.retrofit)
+    implementation(libs.converter.kotlinx.serialization)
 }
