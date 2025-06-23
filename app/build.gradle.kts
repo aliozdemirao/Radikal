@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -15,6 +17,16 @@ android {
     namespace = "com.aliozdemir.radikal"
     compileSdk = 35
 
+    val localProperties = Properties().apply {
+        val localPropertiesFile = project.rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localPropertiesFile.inputStream().use { input ->
+                load(input)
+            }
+        }
+    }
+    val newsApiKey = localProperties["NEWS_API_KEY"]
+
     defaultConfig {
         applicationId = "com.aliozdemir.radikal"
         minSdk = 24
@@ -23,6 +35,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "NEWS_API_KEY",
+            "\"${newsApiKey}\""
+        )
     }
 
     buildTypes {
@@ -43,6 +61,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
