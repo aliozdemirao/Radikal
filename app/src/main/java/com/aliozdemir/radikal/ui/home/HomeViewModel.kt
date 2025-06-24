@@ -2,6 +2,7 @@ package com.aliozdemir.radikal.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aliozdemir.radikal.domain.model.Article
 import com.aliozdemir.radikal.domain.usecase.GetTopHeadlinesUseCase
 import com.aliozdemir.radikal.ui.home.HomeContract.UiAction
 import com.aliozdemir.radikal.ui.home.HomeContract.UiEffect
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,6 +39,7 @@ class HomeViewModel @Inject constructor(
     fun handleUiAction(action: UiAction) {
         when (action) {
             is UiAction.OnCategorySelected -> updateSelectedCategory(action.category)
+            is UiAction.OnArticleClicked -> navigateToDetail(action.article)
         }
     }
 
@@ -44,6 +47,12 @@ class HomeViewModel @Inject constructor(
         if (_uiState.value.selectedCategory != category) {
             updateUiState { copy(selectedCategory = category) }
             fetchNews()
+        }
+    }
+
+    private fun navigateToDetail(article: Article) {
+        viewModelScope.launch {
+            _uiEffect.emit(UiEffect.NavigateToDetail(article))
         }
     }
 

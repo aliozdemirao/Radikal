@@ -1,5 +1,6 @@
 package com.aliozdemir.radikal.ui.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -26,6 +27,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,7 +55,16 @@ fun HomeScreen(
     uiState: UiState,
     onAction: (UiAction) -> Unit,
     uiEffect: SharedFlow<UiEffect>,
+    onArticleClick: (Article) -> Unit,
 ) {
+    LaunchedEffect(Unit) {
+        uiEffect.collect { effect ->
+            when (effect) {
+                is UiEffect.NavigateToDetail -> onArticleClick(effect.article)
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -79,7 +90,9 @@ fun HomeScreen(
                     )
                 }
 
-                uiState.articles.isNotEmpty() -> ArticleList(articles = uiState.articles)
+                uiState.articles.isNotEmpty() -> ArticleList(
+                    articles = uiState.articles,
+                    onArticleClick = { onAction(UiAction.OnArticleClicked(it)) })
 
                 else -> CenteredContent {
                     Text(
@@ -114,13 +127,19 @@ fun CategoryTabs(
 }
 
 @Composable
-fun ArticleList(articles: List<Article>) {
+fun ArticleList(
+    articles: List<Article>,
+    onArticleClick: (Article) -> Unit,
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(top = 8.dp),
     ) {
         items(articles) { article ->
-            ArticleCard(article = article)
+            ArticleCard(
+                article = article,
+                onClick = onArticleClick
+            )
         }
     }
 }
@@ -140,12 +159,14 @@ fun CenteredContent(
 @Composable
 fun ArticleCard(
     article: Article,
+    onClick: (Article) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
+            .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+            .clickable { onClick(article) },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = RoundedCornerShape(8.dp)
     ) {

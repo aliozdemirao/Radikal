@@ -1,5 +1,6 @@
 package com.aliozdemir.radikal.navigation
 
+import com.aliozdemir.radikal.domain.model.Article
 import kotlinx.serialization.Serializable
 
 sealed interface Screen {
@@ -16,5 +17,5 @@ sealed interface Screen {
     data object Bookmark : Screen
 
     @Serializable
-    data object Detail : Screen
+    data class Detail(val article: Article) : Screen
 }

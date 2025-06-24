@@ -24,7 +24,10 @@ object HomeContract {
 
     sealed class UiAction {
         data class OnCategorySelected(val category: String) : UiAction()
+        data class OnArticleClicked(val article: Article) : UiAction()
     }
 
-    sealed class UiEffect
+    sealed class UiEffect {
+        data class NavigateToDetail(val article: Article) : UiEffect()
+    }
 }

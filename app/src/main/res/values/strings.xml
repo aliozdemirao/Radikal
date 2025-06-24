@@ -2,6 +2,7 @@
     <string name="app_name">Radikal</string>
 
     <string name="home_screen_title">Breaking News</string>
+    <string name="detail_screen_title">News Details</string>
 
     <!-- Article -->
     <string name="article_default_title">No Title</string>
