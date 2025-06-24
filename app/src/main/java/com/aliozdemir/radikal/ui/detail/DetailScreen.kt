@@ -90,7 +90,9 @@ fun DetailScreen(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             DetailTopAppBar(
+                isBookmarked = uiState.isBookmarked,
                 onNavigateUp = { onAction(UiAction.OnNavigateUpClicked) },
+                onBookmarkClick = { onAction(UiAction.OnBookmarkClicked) },
                 onBrowserClick = { onAction(UiAction.OnBrowserClicked) },
                 onShareClick = { onAction(UiAction.OnShareClicked) }
             )
@@ -172,7 +174,9 @@ fun DetailScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailTopAppBar(
+    isBookmarked: Boolean,
     onNavigateUp: () -> Unit,
+    onBookmarkClick: () -> Unit,
     onBrowserClick: () -> Unit,
     onShareClick: () -> Unit,
 ) {
@@ -187,6 +191,17 @@ fun DetailTopAppBar(
             }
         },
         actions = {
+            IconButton(onClick = onBookmarkClick) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_bookmark),
+                    contentDescription = null,
+                    tint = if (isBookmarked) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    }
+                )
+            }
             IconButton(onClick = onBrowserClick) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_language),

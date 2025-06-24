@@ -5,11 +5,13 @@ import com.aliozdemir.radikal.domain.model.Article
 object DetailContract {
 
     data class UiState(
+        val isBookmarked: Boolean = false,
         val article: Article? = null
     )
 
     sealed class UiAction {
         data class LoadArticleDetails(val article: Article) : UiAction()
+        data object OnBookmarkClicked : UiAction()
         data object OnBrowserClicked : UiAction()
         data object OnShareClicked : UiAction()
         data object OnNavigateUpClicked : UiAction()

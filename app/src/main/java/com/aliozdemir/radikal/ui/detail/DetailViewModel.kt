@@ -3,6 +3,9 @@ package com.aliozdemir.radikal.ui.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aliozdemir.radikal.domain.model.Article
+import com.aliozdemir.radikal.domain.usecase.DeleteArticleByUrlUseCase
+import com.aliozdemir.radikal.domain.usecase.InsertArticleUseCase
+import com.aliozdemir.radikal.domain.usecase.IsArticleBookmarkedUseCase
 import com.aliozdemir.radikal.ui.detail.DetailContract.UiAction
 import com.aliozdemir.radikal.ui.detail.DetailContract.UiEffect
 import com.aliozdemir.radikal.ui.detail.DetailContract.UiState
@@ -18,7 +21,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailViewModel @Inject constructor() : ViewModel() {
+class DetailViewModel @Inject constructor(
+    private val insertArticleUseCase: InsertArticleUseCase,
+    private val deleteArticleByUrlUseCase: DeleteArticleByUrlUseCase,
+    private val isArticleBookmarkedUseCase: IsArticleBookmarkedUseCase,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
@@ -29,6 +36,7 @@ class DetailViewModel @Inject constructor() : ViewModel() {
     fun handleUiAction(action: UiAction) {
         when (action) {
             is UiAction.LoadArticleDetails -> loadArticle(action.article)
+            UiAction.OnBookmarkClicked -> toggleBookmarkStatus()
             UiAction.OnBrowserClicked -> openArticleInBrowser()
             UiAction.OnShareClicked -> shareArticle()
             UiAction.OnNavigateUpClicked -> navigateBack()
@@ -37,6 +45,26 @@ class DetailViewModel @Inject constructor() : ViewModel() {
 
     private fun loadArticle(article: Article) {
         updateUiState { copy(article = article) }
+        viewModelScope.launch {
+            val isBookmarked = isArticleBookmarkedUseCase(article.url!!)
+            updateUiState { copy(isBookmarked = isBookmarked) }
+        }
+    }
+
+    private fun toggleBookmarkStatus() {
+        viewModelScope.launch {
+            val currentlyBookmarked = _uiState.value.isBookmarked
+            val newBookmarked = !currentlyBookmarked
+
+            updateUiState { copy(isBookmarked = newBookmarked) }
+
+            val article = _uiState.value.article
+            if (newBookmarked) {
+                insertArticleUseCase(article!!)
+            } else {
+                deleteArticleByUrlUseCase(article!!.url!!)
+            }
+        }
     }
 
     private fun openArticleInBrowser() {
