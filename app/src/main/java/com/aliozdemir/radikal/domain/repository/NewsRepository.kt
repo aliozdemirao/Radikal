@@ -1,5 +1,6 @@
 package com.aliozdemir.radikal.domain.repository
 
+import com.aliozdemir.radikal.domain.model.Article
 import com.aliozdemir.radikal.domain.model.News
 import com.aliozdemir.radikal.util.Resource
 import kotlinx.coroutines.flow.Flow
@@ -14,4 +15,8 @@ interface NewsRepository {
         pageSize: Int?,
         page: Int?
     ): Flow<Resource<News>>
+
+    suspend fun insertArticle(article: Article)
+    suspend fun deleteArticleByUrl(articleUrl: String)
+    suspend fun isArticleBookmarked(articleUrl: String): Boolean
 }

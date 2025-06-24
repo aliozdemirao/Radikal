@@ -1,8 +1,11 @@
 package com.aliozdemir.radikal.data.repository
 
+import com.aliozdemir.radikal.data.local.dao.ArticleDao
 import com.aliozdemir.radikal.data.mapper.toDomain
+import com.aliozdemir.radikal.data.mapper.toEntity
 import com.aliozdemir.radikal.data.remote.api.NewsApi
 import com.aliozdemir.radikal.data.remote.dto.ErrorDto
+import com.aliozdemir.radikal.domain.model.Article
 import com.aliozdemir.radikal.domain.model.News
 import com.aliozdemir.radikal.domain.repository.NewsRepository
 import com.aliozdemir.radikal.util.Resource
@@ -16,6 +19,7 @@ import javax.inject.Inject
 
 class NewsRepositoryImpl @Inject constructor(
     private val api: NewsApi,
+    private val dao: ArticleDao,
 ) : NewsRepository {
 
     override fun getTopHeadlines(
@@ -65,6 +69,18 @@ class NewsRepositoryImpl @Inject constructor(
                 )
             )
         }
+    }
+
+    override suspend fun insertArticle(article: Article) {
+        dao.insertArticle(article.toEntity())
+    }
+
+    override suspend fun deleteArticleByUrl(articleUrl: String) {
+        dao.deleteArticleByUrl(articleUrl)
+    }
+
+    override suspend fun isArticleBookmarked(articleUrl: String): Boolean {
+        return dao.isArticleBookmarked(articleUrl)
     }
 
     private fun parseErrorBody(errorBody: ResponseBody?): Pair<String?, String?> {
