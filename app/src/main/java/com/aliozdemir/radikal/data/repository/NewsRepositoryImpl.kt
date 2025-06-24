@@ -11,6 +11,7 @@ import com.aliozdemir.radikal.domain.repository.NewsRepository
 import com.aliozdemir.radikal.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 import okhttp3.ResponseBody
 import retrofit2.HttpException
@@ -81,6 +82,16 @@ class NewsRepositoryImpl @Inject constructor(
 
     override suspend fun isArticleBookmarked(articleUrl: String): Boolean {
         return dao.isArticleBookmarked(articleUrl)
+    }
+
+    override fun getAllBookmarkedArticles(): Flow<List<Article>> {
+        return dao.getAllBookmarkedArticles().map { articles ->
+            articles.map { it.toDomain() }
+        }
+    }
+
+    override suspend fun deleteAllBookmarkedArticles() {
+        dao.deleteAllBookmarkedArticles()
     }
 
     private fun parseErrorBody(errorBody: ResponseBody?): Pair<String?, String?> {
