@@ -10,4 +10,7 @@ plugins {
 
     // Serialization
     alias(libs.plugins.kotlin.serialization) apply false
+
+    // Room
+    alias(libs.plugins.room) apply false
 }

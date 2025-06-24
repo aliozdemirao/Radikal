@@ -11,6 +11,9 @@ plugins {
 
     // Serialization
     alias(libs.plugins.kotlin.serialization)
+
+    // Room
+    alias(libs.plugins.room)
 }
 
 android {
@@ -63,6 +66,9 @@ android {
         compose = true
         buildConfig = true
     }
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 }
 
 dependencies {
@@ -101,4 +107,9 @@ dependencies {
     // Coil
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+
+    // Room
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
 }
