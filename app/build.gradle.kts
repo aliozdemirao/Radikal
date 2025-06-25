@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
@@ -18,7 +19,7 @@ plugins {
 
 android {
     namespace = "com.aliozdemir.radikal"
-    compileSdk = 35
+    compileSdk = 36
 
     val localProperties = Properties().apply {
         val localPropertiesFile = project.rootProject.file("local.properties")
@@ -33,7 +34,7 @@ android {
     defaultConfig {
         applicationId = "com.aliozdemir.radikal"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -59,8 +60,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlinOptions {
-        jvmTarget = "21"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
+        }
     }
     buildFeatures {
         compose = true
