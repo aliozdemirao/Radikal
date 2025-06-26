@@ -15,6 +15,7 @@ import com.aliozdemir.radikal.navigation.Screen.Detail
 import com.aliozdemir.radikal.navigation.Screen.Home
 import com.aliozdemir.radikal.navigation.Screen.Search
 import com.aliozdemir.radikal.ui.bookmark.BookmarkScreen
+import com.aliozdemir.radikal.ui.bookmark.BookmarkViewModel
 import com.aliozdemir.radikal.ui.detail.DetailScreen
 import com.aliozdemir.radikal.ui.detail.DetailViewModel
 import com.aliozdemir.radikal.ui.home.HomeScreen
@@ -50,8 +51,14 @@ fun NavigationGraph(
             )
         }
         composable<Bookmark> {
+            val viewModel: BookmarkViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val uiEffect = viewModel.uiEffect
             BookmarkScreen(
-
+                uiState = uiState,
+                onAction = viewModel::handleUiAction,
+                uiEffect = uiEffect,
+                onArticleClick = { article -> navController.navigate(Detail(article)) }
             )
         }
         composable<Detail> (

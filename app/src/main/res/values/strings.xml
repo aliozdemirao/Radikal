@@ -3,6 +3,7 @@
 
     <string name="home_screen_title">Breaking News</string>
     <string name="detail_screen_title">News Details</string>
+    <string name="bookmark_screen_title">Bookmark News</string>
 
     <!-- Article -->
     <string name="article_default_title">No Title</string>
