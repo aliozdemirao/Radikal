@@ -21,6 +21,7 @@ import com.aliozdemir.radikal.ui.detail.DetailViewModel
 import com.aliozdemir.radikal.ui.home.HomeScreen
 import com.aliozdemir.radikal.ui.home.HomeViewModel
 import com.aliozdemir.radikal.ui.search.SearchScreen
+import com.aliozdemir.radikal.ui.search.SearchViewModel
 import kotlin.reflect.typeOf
 
 @Composable
@@ -46,8 +47,14 @@ fun NavigationGraph(
             )
         }
         composable<Search> {
+            val viewModel: SearchViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val uiEffect = viewModel.uiEffect
             SearchScreen(
-
+                uiState = uiState,
+                onAction = viewModel::handleUiAction,
+                uiEffect = uiEffect,
+                onArticleClick = { article -> navController.navigate(Detail(article)) }
             )
         }
         composable<Bookmark> {
