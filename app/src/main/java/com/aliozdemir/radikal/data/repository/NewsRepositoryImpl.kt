@@ -72,6 +72,62 @@ class NewsRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getEverything(
+        query: String?,
+        searchIn: String?,
+        sources: String?,
+        domains: String?,
+        excludeDomains: String?,
+        from: String?,
+        to: String?,
+        language: String?,
+        sortBy: String?,
+        pageSize: Int?,
+        page: Int?,
+    ): Flow<Resource<News>> = flow {
+        emit(Resource.Loading)
+
+        try {
+            val newsDto = api.getEverything(
+                query = query,
+                searchIn = searchIn,
+                sources = sources,
+                domains = domains,
+                excludeDomains = excludeDomains,
+                from = from,
+                to = to,
+                language = language,
+                sortBy = sortBy,
+                pageSize = pageSize,
+                page = page
+            )
+
+            emit(Resource.Success(newsDto.toDomain()))
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()
+            val (apiErrorMessage, apiErrorCode) = parseErrorBody(errorBody)
+
+            emit(Resource.Error(
+                message = apiErrorMessage ?: "An unexpected HTTP error occurred: ${e.code()}",
+                errorCode = apiErrorCode,
+                throwable = e
+                )
+            )
+        } catch (e: IOException) {
+            emit(Resource.Error(
+                message = "Network connection error: Please check your internet connection.",
+                throwable = e
+                )
+            )
+        } catch (e: Exception) {
+            emit(Resource.Error(
+                message = e.localizedMessage ?: "An unknown error occurred.",
+                throwable = e
+                )
+            )
+        }
+    }
+
     override suspend fun insertArticle(article: Article) {
         dao.insertArticle(article.toEntity())
     }
